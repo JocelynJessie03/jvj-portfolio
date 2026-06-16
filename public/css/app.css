@@ -148,17 +148,17 @@ ul { list-style: none; }
 .nav-logo {
   flex-shrink: 0;
 }
+.logo-image {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
 .logo-initials {
   font-family: var(--font-display);
   font-size: 1.4rem;
   font-weight: 600;
   color: var(--rose);
   letter-spacing: .06em;
-}
-.logo-image {
-  height: 32px;
-  width: auto;
-  object-fit: contain;
 }
 .nav-links {
   display: flex;
@@ -189,6 +189,9 @@ ul { list-style: none; }
 
 /* ============================================================
    HERO
+   FIX: Reduced padding-block so both heading lines fit on screen.
+        Reduced font-size clamp so "God do the rest." never overflows.
+        Added pb-safe so ::after line has breathing room.
    ============================================================ */
 .hero {
   position: relative;
@@ -202,26 +205,32 @@ ul { list-style: none; }
   position: relative;
   z-index: 2;
   text-align: center;
-  padding-block: 6rem;
+  /* FIX: was 6rem — reduced so both heading lines always fit */
+  padding-block: 3rem;
 }
 .hero-eyebrow {
   font-family: var(--font-display);
   font-style: italic;
-  font-weight: 400; /* regular, not bold */
-  font-size: clamp(3.15rem, 6vw, 3.9rem);
+  font-weight: 400;
+  /* FIX: was clamp(3.15rem, 6vw, 3.9rem) — matched to headline scale */
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
   color: rgba(247,243,236,.85);
   letter-spacing: 0;
   text-transform: none;
-  margin-bottom: .75rem;
+  margin-bottom: .5rem;
+  display: block;
 }
 .hero-headline {
   font-family: var(--font-display);
-  font-size: clamp(3.5rem, 9vw, 7rem);
+  /* FIX: was clamp(3.5rem,9vw,7rem) — too large, caused line to be pushed off screen */
+  font-size: clamp(2.6rem, 7vw, 5.5rem);
   font-weight: 400;
   font-style: italic;
   color: var(--lavenderblush);
-  line-height: 1.05;
-  margin-bottom: 2.5rem;
+  line-height: 1.1;
+  /* FIX: was 2.5rem — needs room for the ::after underline bar */
+  margin-bottom: 3rem;
+  display: block;
 }
 .hero-headline::after {
   content: '';
@@ -229,7 +238,7 @@ ul { list-style: none; }
   width: 80px;
   height: 3px;
   background: var(--rose);
-  margin: 1.5rem auto 0;
+  margin: 1.25rem auto 0;
   border-radius: 2px;
 }
 .hero-decoration { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
@@ -345,7 +354,69 @@ ul { list-style: none; }
 .project-card.visible { transform: translateY(0); opacity: 1; }
 .project-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
 
-.project-card-image { aspect-ratio: 16/9; overflow: hidden; }
+/* ── Project card image area ── */
+.project-card-image {
+  width: 100%;
+  overflow: hidden;
+  background: transparent;
+  padding: 1.25rem 1.25rem 0;
+}
+.project-card-image img,
+.project-card-img-cover,
+.project-card-logo-wrap img,
+.project-card-logo {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+}
+.project-card-placeholder {
+  width: 100%;
+  background: linear-gradient(135deg, #3d1a2e, #4e2040);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+}
+.project-num {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: rgba(201,169,110,.25);
+}
+.project-card-body { padding: 1.5rem; }
+
+/* Legacy logo mode (small icon centred on dark bg) */
+.project-card-logo-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  padding: 0;
+}
+.project-card-logo {
+  width: auto !important;
+  max-width: 120px !important;
+  max-height: 120px !important;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+  filter: none;
+}
+
+/* Generic project logo used on project full page */
+.project-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
 .project-card-placeholder {
   width: 100%; height: 100%;
   background: linear-gradient(135deg, #3d1a2e, #4e2040);
@@ -361,6 +432,20 @@ ul { list-style: none; }
   color: rgba(201,169,110,.25);
 }
 .project-card-body { padding: 1.5rem; }
+
+/* Project-card layout override: image beside text on desktop */
+@media (min-width: 901px) {
+  .project-card { display: flex; gap: 1rem; align-items: flex-start; }
+  .project-card-image { aspect-ratio: unset; overflow: visible; flex: 0 0 40%; width: 40%; max-width: 40%; background: transparent; padding: 0; display: block; }
+  .project-card-img-cover, .project-card-logo-wrap img, .project-card-logo { width: 100%; height: auto; object-fit: unset; display: block; box-shadow: none; border-radius: 0; }
+  .project-card-logo-wrap { background: transparent; padding: 0; min-height: 0; display: block; }
+  .project-card-body { flex: 1 1 auto; padding: 1rem 1rem 1rem 0; }
+}
+
+@media (max-width: 900px) {
+  .project-card { display: block; }
+  .project-card-image { width: 100%; max-width: 100%; }
+}
 .project-card-title {
   font-family: var(--font-display);
   font-size: 1.15rem;
@@ -464,6 +549,46 @@ ul { list-style: none; }
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   color: var(--berry);
   margin-bottom: 1.75rem;
+}
+
+/* Full screenshot on projects page — no crop */
+.project-full-image {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  background: var(--mistyrose);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.project-full-screenshot {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: unset;
+  border-radius: var(--radius-xl);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 900px) {
+  .project-full-screenshot {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: unset;
+  }
+}
+
+/* Small logo on projects full page */
+.project-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-sm);
 }
 
 /* ============================================================
@@ -637,52 +762,16 @@ ul { list-style: none; }
   .projects-grid { grid-template-columns: 1fr; }
 }
 
-.project-logo {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  border-radius: var(--radius-md);
-  margin-bottom: 1rem;
-  box-shadow: var(--shadow-sm);
-}
-
-/* Logo on homepage cards */
-.project-card-logo-wrap {
-  width: 100%;
-  height: 100%;
-  min-height: 180px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255,255,255,.06);
-  padding: 1.5rem;
-}
-.project-card-logo {
-  max-width: 120px;
-  max-height: 120px;
-  object-fit: contain;
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,.3));
-}
-
-/* Full screenshot on projects page — no crop */
-.project-full-image {
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg);
-  background: var(--mistyrose);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.project-full-screenshot {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: contain;
-}
-
-/* Reduced motion */
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
+  .hero-content > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero-headline.glow, .btn-primary.glow, .hero-blob.glow { animation: none !important; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   html { scroll-behavior: auto; }
   .skill-fill { transition: none; }

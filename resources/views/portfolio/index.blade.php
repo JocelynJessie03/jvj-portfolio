@@ -11,8 +11,8 @@
             Jocelyn V Jessie | Online Portfolio
         </span>
         <h4 class="hero-eyebrow">Always do my best and let</h4>
-        <h1 class="hero-headline glow">God do the rest.</h1>
-        <p class="hero-subtitle" style="max-width:62ch;margin:1.25rem auto 2rem;color:rgba(247,243,236,.75);">
+        <h1 class="hero-headline">God do the rest.</h1>
+        <p class="hero-subtitle" style="max-width:62ch;margin:0 auto 2rem;color:rgba(247,243,236,.75);">
             Driven by curiosity, innovation, and a passion for continuous growth, I enjoy transforming ideas into meaningful solutions. 
             Explore my portfolio to discover the experiences, projects, and milestones that have shaped my journey in technology and leadership.
         </p>
@@ -96,9 +96,29 @@
             @foreach($projects as $i => $project)
             <article class="project-card project-card--preview" style="--delay: {{ $i * 80 }}ms">
                 <div class="project-card-image">
-                    @if(!empty($project['logo']))
+                    {{--
+                        FIX: Dulu semua gambar pakai .project-card-logo-wrap + .project-card-logo
+                        yang menaruh gambar kecil terpusat di tengah background gelap.
+                        Sekarang:
+                        - Kalau ada 'screenshot' → pakai .project-card-img-cover (fill penuh, object-fit:cover)
+                        - Kalau hanya 'logo' → tetap pakai mode logo kecil terpusat
+                        - Kalau tidak ada gambar → tampilkan nomor placeholder
+                    --}}
+                    @if(!empty($project['screenshot']))
+                        <img
+                            src="{{ asset('images/' . $project['screenshot']) }}"
+                            alt="{{ $project['title'] }}"
+                            loading="lazy"
+                            class="project-card-img-cover"
+                        />
+                    @elseif(!empty($project['logo']))
                         <div class="project-card-logo-wrap">
-                            <img src="{{ asset('images/' . $project['logo']) }}" alt="{{ $project['title'] }} logo" loading="lazy" class="project-card-logo" />
+                            <img
+                                src="{{ asset('images/' . $project['logo']) }}"
+                                alt="{{ $project['title'] }} logo"
+                                loading="lazy"
+                                class="project-card-logo"
+                            />
                         </div>
                     @else
                         <div class="project-card-placeholder" aria-hidden="true">
